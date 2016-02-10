@@ -73,7 +73,6 @@ int main(int argc, char** argv) {
                 i++;
         }
 
-	siglength = 256; decompositions = 3;	/* TODO */
         inp = (double*)malloc(sizeof(double)* siglength);
         out = (double*)malloc(sizeof(double)* siglength);
         diff = (double*)malloc(sizeof(double)* siglength);

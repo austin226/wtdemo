@@ -12,15 +12,25 @@
 
 #define ARG_LEN 100
 
+void do_wave_init(char *signal, char *wavelet) {
+	wave_object wo;
+	wo = wave_init(wavelet);
+	if (wo->filtlength < 0) {
+		printf("Invalid wavelet filter.\n");
+		return;
+	}
+	wave_summary(wo);
+}
+
 /*
  * Performs a wavelet transform function on
  * a given input signal. argv[1] is the input signal,
- * and argv[2] is the transform. Alternatively,
+ * and argv[2] is the wavelet. Alternatively,
  * if these are not present, they will be
  * prompted inside main.
  */
 int main(int argc, char** argv) {
-	char signal_name[ARG_LEN], transform_name[ARG_LEN];
+	char signal_name[ARG_LEN], wavelet_name[ARG_LEN];
 	/* TODO make sure args match ARG_LEN or less */
 
 	if (argc > 3) {
@@ -30,32 +40,33 @@ int main(int argc, char** argv) {
 		return (EXIT_SUCCESS);
 	}
 	else if (argc == 3) {
-		/* Wavelet and transform specified. */
+		/* Signal and wavelet specified. */
 		strcpy(signal_name, argv[1]);
-		strcpy(transform_name, argv[2]);
+		strcpy(wavelet_name, argv[2]);
 	}
 	else if (argc == 2) {
-		/* Wavelet specified, no transform. */
+		/* Signal specified, no wavelet. */
 		strcpy(signal_name, argv[1]);
 
-		/* Prompt for tranform */
-		printf("Select transform: ");
-		scanf("%s", &transform_name);
+		/* Prompt for wavelet */
+		printf("Select wavelet: ");
+		scanf("%s", &wavelet_name);
 	}
 	else {
 		/* Nothing specified. Prompt for info. */
 
-		/* Prompt for a wave file */
+		/* Prompt for a signal */
 		printf("Name of signal: ");
 		scanf("%s", &signal_name);
 
-		/* Prompt for tranform */
-		printf("Select transform: ");
-		scanf("%s", &transform_name);
+		/* Prompt for wavelet */
+		printf("Select wavelet: ");
+		scanf("%s", &wavelet_name);
 	}
 
-	printf("signal %s, trans %s\n", signal_name, transform_name);
+	printf("signal %s, trans %s\n", signal_name, wavelet_name);
 
+	do_wave_init(signal_name, wavelet_name);
 
 	return (EXIT_SUCCESS);
 }

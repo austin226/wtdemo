@@ -28,17 +28,15 @@ double absmax(double *array, int N) {
 }
 
 /*
- * Performs a wavelet transform function on
- * a given input signal. argv[1] is the input signal,
- * argv[2] is the wavelet, and argv[3] is the transform.
+ * 
  */
 int main(int argc, char** argv) {
 	/* For now, based on dwttest.c; TODO change to dynamic testing */
 
 	char signal_name[ARG_LEN], wavelet_name[ARG_LEN], transform_name[ARG_LEN];
+        int siglength, decompositions, i;
 
         double *inp, *out, *diff;
-        int siglength, i, decompositions;
 
         FILE *ifp;
         double temp[1200];
@@ -46,15 +44,18 @@ int main(int argc, char** argv) {
 	wave_object wo;
 	wt_object wt;
 
-	if (argc == 4) {
+	if (argc == 6) {
 		/* TODO validate input */
 		strcpy(signal_name, argv[1]);
-		strcpy(wavelet_name, argv[2]);
-		strcpy(transform_name, argv[3]);
+                siglength = atoi(argv[2]);
+                decompositions = atoi(argv[3]);
+		strcpy(wavelet_name, argv[4]);
+		strcpy(transform_name, argv[5]);
+                
 	}
 	else {
 		/* TODO print usage */
-		printf("Need args\n");
+                printf("Usage: wtdemo signal_filename signal_length num_decompositions wavelet_name transform_name\n");
 		return(EXIT_FAILURE);
 	}
 
@@ -72,6 +73,7 @@ int main(int argc, char** argv) {
                 i++;
         }
 
+	siglength = 256; decompositions = 3;	/* TODO */
         inp = (double*)malloc(sizeof(double)* siglength);
         out = (double*)malloc(sizeof(double)* siglength);
         diff = (double*)malloc(sizeof(double)* siglength);
@@ -90,7 +92,6 @@ int main(int argc, char** argv) {
 	}
 	
 	/* init transform */
-	siglength = 256; decompositions = 3;	/* TODO */
 	wt = wt_init(wo, transform_name, siglength, decompositions);
 	setDWTExtension(wt, "sym");
 	setWTConv(wt, "direct");

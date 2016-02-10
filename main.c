@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 	char signal_name[ARG_LEN], wavelet_name[ARG_LEN], transform_name[ARG_LEN];
 
         double *inp, *out, *diff;
-        int N, i, J;
+        int siglength, i, decompositions;
 
         FILE *ifp;
         double temp[1200];
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 		return(EXIT_FAILURE);
 	}
 
-	printf("signal %s, wavelet %s, trans %s\n", signal_name, wavelet_name, transform_name);
+        printf("Performing transformation '%s' with wavelet '%s' on signal '%s'\n\n", transform_name, wavelet_name, signal_name);
 
         /* init signal */
         ifp = fopen(signal_name, "r");
@@ -72,11 +72,11 @@ int main(int argc, char** argv) {
                 i++;
         }
 
-        inp = (double*)malloc(sizeof(double)* N);
-        out = (double*)malloc(sizeof(double)* N);
-        diff = (double*)malloc(sizeof(double)* N);
+        inp = (double*)malloc(sizeof(double)* siglength);
+        out = (double*)malloc(sizeof(double)* siglength);
+        diff = (double*)malloc(sizeof(double)* siglength);
 
-        for (i = 0; i < N; ++i) {
+        for (i = 0; i < siglength; ++i) {
                 inp[i] = temp[i];
                 //printf("%g \n",inp[i]);
         }        
@@ -88,21 +88,20 @@ int main(int argc, char** argv) {
 		wave_free(wo);
 		return(EXIT_FAILURE);
 	}
-	wave_summary(wo);
 	
 	/* init transform */
-	N = 256; J = 3;	/* TODO */
-	wt = wt_init(wo, transform_name, N, J);
+	siglength = 256; decompositions = 3;	/* TODO */
+	wt = wt_init(wo, transform_name, siglength, decompositions);
 	setDWTExtension(wt, "sym");
 	setWTConv(wt, "direct");
 
         dwt(wt, inp);// Perform DWT
+        printf("Wavelet transform output: \n");
         for (i = 0; i < wt->outlength; ++i) {
                 printf("%g ",wt->output[i]);
         }
 
-        printf("\n MAX %g \n", absmax(diff, wt->siglength)); // If Reconstruction succeeded then the output should be a small value.
-        
+        printf("\n\nWavelet transform summary:\n");
         wt_summary(wt);// Prints the full summary.
         wave_free(wo);
         wt_free(wt);

@@ -25,48 +25,46 @@ void do_wave_init(char *signal, char *wavelet) {
 /*
  * Performs a wavelet transform function on
  * a given input signal. argv[1] is the input signal,
- * and argv[2] is the wavelet. Alternatively,
- * if these are not present, they will be
- * prompted inside main.
+ * argv[2] is the wavelet, and argv[3] is the transform.
  */
 int main(int argc, char** argv) {
-	char signal_name[ARG_LEN], wavelet_name[ARG_LEN];
-	/* TODO make sure args match ARG_LEN or less */
+	/* For now, based on dwttest.c; TODO change to dynamic testing */
 
-	if (argc > 3) {
-		/* Too many arguments specified. */
-		printf("Too many args!");
-		/* TODO usage message */
-		return (EXIT_SUCCESS);
-	}
-	else if (argc == 3) {
-		/* Signal and wavelet specified. */
+	char signal_name[ARG_LEN], wavelet_name[ARG_LEN], transform_name[ARG_LEN];
+
+	int N, J;
+
+	wave_object wo;
+	wt_object wt;
+
+	if (argc == 4) {
+		/* TODO validate input */
 		strcpy(signal_name, argv[1]);
 		strcpy(wavelet_name, argv[2]);
-	}
-	else if (argc == 2) {
-		/* Signal specified, no wavelet. */
-		strcpy(signal_name, argv[1]);
-
-		/* Prompt for wavelet */
-		printf("Select wavelet: ");
-		scanf("%s", &wavelet_name);
+		strcpy(transform_name, argv[3]);
 	}
 	else {
-		/* Nothing specified. Prompt for info. */
-
-		/* Prompt for a signal */
-		printf("Name of signal: ");
-		scanf("%s", &signal_name);
-
-		/* Prompt for wavelet */
-		printf("Select wavelet: ");
-		scanf("%s", &wavelet_name);
+		/* TODO print usage */
+		printf("Need args\n");
+		return(EXIT_SUCCESS);
 	}
 
-	printf("signal %s, trans %s\n", signal_name, wavelet_name);
+	printf("signal %s, wavelet %s, trans %s\n", signal_name, wavelet_name, transform_name);
 
-	do_wave_init(signal_name, wavelet_name);
+	/* init wavelet */
+	wo = wave_init(wavelet_name);
+	if (wo->filtlength < 0) {
+		pritnf("Invalid wavelet filter.\n");
+		wave_free(wo);
+		return(EXIT_SUCCESS);
+	}
+	wave_summary(wo);
+	
+	/* init transform */
+	N = 256; J = 3;	/* TODO */
+	wt = wt_init(wo, transform_name, N, J);
+	setDWTExtension(wt, "sym");
+	setWTConv(wt, "direct");
 
 	return (EXIT_SUCCESS);
 }

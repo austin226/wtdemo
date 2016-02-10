@@ -8,5 +8,3 @@ http://stackoverflow.com/questions/22947469/c-code-wavelet-transform-and-explana
 To use:
 
 make
-
-./wtdemo signal-file wavelet-name transform-type

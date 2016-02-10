@@ -101,12 +101,6 @@ int main(int argc, char** argv) {
                 printf("%g ",wt->output[i]);
         }
 
-        idwt(wt, out);// Perform IDWT (if needed)
-        // Test Reconstruction
-        for (i = 0; i < wt->siglength; ++i) {
-                diff[i] = out[i] - inp[i];
-        }
-
         printf("\n MAX %g \n", absmax(diff, wt->siglength)); // If Reconstruction succeeded then the output should be a small value.
         
         wt_summary(wt);// Prints the full summary.

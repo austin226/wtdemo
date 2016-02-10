@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 	/* init wavelet */
 	wo = wave_init(wavelet_name);
 	if (wo->filtlength < 0) {
-		pritnf("Invalid wavelet filter.\n");
+		printf("Invalid wavelet filter.\n");
 		wave_free(wo);
 		return(EXIT_SUCCESS);
 	}
